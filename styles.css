@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --bg: #fff7fb;
     --card: #ffffff;
     --text: #1b1b1f;
@@ -348,6 +348,27 @@ body {
 }
 
 /* Quiz */
+.quizCats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 8px;
+}
+
+.chip {
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,.08);
+    background: rgba(255,255,255,.65);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+    .chip.active {
+        border-color: rgba(0,0,0,.18);
+        background: rgba(255,214,231,.55);
+    }
+
 .quizQuestion {
     font-weight: 900;
     margin: 10px 0 10px;
