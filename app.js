@@ -13,7 +13,7 @@ const K_QUIZ_LEVEL = "uniweek_quizLevel";       // easy|medium|hard
 const quizHistKey = (level) => `uniweek_quizHistory8_${level}`;
 
 /* =========================
-   DOM
+   DOM helpers
 ========================= */
 const $ = (id) => document.getElementById(id);
 
@@ -138,9 +138,7 @@ function loadJSON(key, fallback) {
     return fallback;
   }
 }
-function saveJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-}
+function saveJSON(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
 
 function getWeek() {
   const w = localStorage.getItem(K_WEEK);
@@ -194,7 +192,6 @@ function todayDayKey() {
 function formatTodayLabel() {
   return new Date().toLocaleDateString("ru-RU", { weekday:"long", day:"2-digit", month:"long" });
 }
-
 function weekFilterOK(item, selectedWeek) {
   return selectedWeek === "odd"
     ? (item.weekType === "odd" || item.weekType === "both")
@@ -341,7 +338,6 @@ function renderAll() {
    CSV Import
 ========================= */
 function splitCSVLine(line) {
-  // простая поддержка кавычек: "..."
   let res = [];
   let cur = "";
   let inQ = false;
@@ -364,7 +360,7 @@ function parseCSV(text) {
 
   const out = [];
   for (let i = 1; i < lines.length; i++) {
-    const n = i + 1; // line number
+    const n = i + 1;
     const cols = splitCSVLine(lines[i]);
     if (cols.length !== 8) throw new Error(`Строка ${n}: нужно 8 колонок, найдено ${cols.length}.`);
 
@@ -457,16 +453,13 @@ function pickWishSmart() {
   const history = loadJSON(K_WISH_HISTORY, []);
   const lastMap = loadJSON(K_WISH_LASTMAP, {});
   const today = isoDate();
-
   const inLast10 = new Set(history);
 
-  // не повторять если было в последних 10
-  // и не повторять если было менее 3 дней назад
   let pool = BASE_WISHES.filter(w => {
     if (inLast10.has(w)) return false;
     const last = lastMap[w];
     if (!last) return true;
-    return daysBetween(last, today) >= 3;
+    return daysBetween(last, today) >= 3; // не повторять чаще чем раз в 3 дня
   });
 
   if (!pool.length) pool = BASE_WISHES.filter(w => !inLast10.has(w));
@@ -485,7 +478,6 @@ function setNewWish() {
 
   history.unshift(w);
   saveJSON(K_WISH_HISTORY, history.slice(0, 10));
-
   lastMap[w] = today;
   saveJSON(K_WISH_LASTMAP, lastMap);
 }
@@ -555,7 +547,6 @@ const MEM_EMOJIS = ["💗","🌸","✨","😊","🥰","🌷","⭐️","🍓","�
 const MEM_COVER = "♡";
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
 function setMemoryUI(text) {
   memoryStatus.textContent = text;
   memoryLevelLabel.textContent = `Level: ${memLevel}`;
@@ -579,7 +570,6 @@ function rebuildMemoryGrid() {
     b.style.background = MEM_COLORS[i % MEM_COLORS.length];
     b.dataset.emoji = MEM_EMOJIS[i % MEM_EMOJIS.length];
     b.textContent = MEM_COVER;
-    b.style.color = "rgba(0,0,0,.35)";
     memoryGridEl.appendChild(b);
     memButtons.push(b);
   }
@@ -867,4 +857,20 @@ quizNextBtn.addEventListener("click", nextQuiz);
 quizResetBtn.addEventListener("click", resetQuiz);
 quizEasyBtn.addEventListener("click", () => setQuizLevel("easy"));
 quizMedBtn.addEventListener("click", () => setQuizLevel("medium"));
-quizHardBtn.addEventListener
+quizHardBtn.addEventListener("click", () => setQuizLevel("hard"));
+
+/* =========================
+   Init
+========================= */
+function init() {
+  updateWeekUI();
+  renderAll();
+  showTab("schedule");
+
+  setNewWish();
+  memoryReset();
+
+  updateQuizLevelUI();
+  resetQuiz();
+}
+init();
