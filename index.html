@@ -1,521 +1,243 @@
-:root {
-    --bg: #fff7fb;
-    --card: #ffffff;
-    --text: #1b1b1f;
-    --muted: #6b6b78;
-    --accent: #F7A8C6;
-    --accent2: #fce3ee;
-    --danger: #d94b5a;
-    --border: rgba(0,0,0,.08);
-    --shadow: 0 10px 30px rgba(0,0,0,.06);
-    --radius: 18px;
-}
-
-* {
-    box-sizing: border-box
-}
-
-body {
-    margin: 0;
-    font-family: -apple-system, system-ui, Segoe UI, Roboto, Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-}
-
-.appHeader {
-    padding: 18px 16px 12px;
-    position: sticky;
-    top: 0;
-    background: linear-gradient(180deg, var(--bg), rgba(255,247,251,.85));
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
-    z-index: 10;
-}
-
-.titleBlock {
-    display: flex;
-    flex-direction: column;
-    gap: 4px
-}
-
-.appTitle {
-    font-weight: 800;
-    font-size: 18px;
-    letter-spacing: .2px
-}
-
-.subtitle {
-    color: var(--muted);
-    font-size: 12px;
-    min-height: 14px
-}
-
-.weekSwitch {
-    margin-top: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.pillLabel {
-    font-size: 12px;
-    color: var(--muted);
-    padding: 6px 10px;
-    background: rgba(255,255,255,.7);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-}
-
-.segmented {
-    display: flex;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,.7);
-    border-radius: 999px;
-    overflow: hidden;
-}
-
-.segBtn {
-    border: 0;
-    background: transparent;
-    padding: 8px 14px;
-    font-weight: 800;
-    font-size: 12px;
-    color: var(--muted);
-    cursor: pointer;
-}
-
-    .segBtn.active {
-        color: #fff;
-        background: var(--accent);
-    }
-
-.container {
-    padding: 14px 16px 28px;
-    max-width: 520px;
-    margin: 0 auto;
-}
-
-.tabs {
-    display: flex;
-    gap: 10px;
-    margin: 8px 0 14px;
-}
-
-.tabBtn {
-    flex: 1;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,.65);
-    border-radius: 999px;
-    padding: 10px 12px;
-    font-weight: 900;
-    color: var(--muted);
-    cursor: pointer;
-}
-
-    .tabBtn.active {
-        background: var(--accent2);
-        color: var(--text);
-        border-color: rgba(247,168,198,.55);
-    }
-
-.screen {
-    display: none
-}
-
-    .screen.active {
-        display: block
-    }
-
-.card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 14px;
-    margin-bottom: 14px;
-}
-
-    .card.soft {
-        background: rgba(255,255,255,.55);
-        box-shadow: none;
-    }
-
-.cardTitleRow {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.cardTitle {
-    font-weight: 950
-}
-
-.smallMuted {
-    color: var(--muted);
-    font-size: 12px
-}
-
-.center {
-    text-align: center
-}
-
-.row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap
-}
-
-    .row.end {
-        justify-content: flex-end
-    }
-
-.grow {
-    flex: 1
-}
-
-.btn {
-    border: 0;
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-weight: 900;
-    background: var(--accent);
-    color: #fff;
-    cursor: pointer;
-}
-
-    .btn.secondary {
-        background: rgba(0,0,0,.04);
-        color: var(--text);
-        border: 1px solid var(--border);
-    }
-
-    .btn.danger {
-        background: var(--danger);
-        color: #fff;
-        border: 0;
-    }
-
-        .btn.danger.secondary {
-            background: rgba(217,75,90,.10);
-            color: var(--danger);
-            border: 1px solid rgba(217,75,90,.25);
-        }
-
-.fileBtn {
-    position: relative;
-    overflow: hidden
-}
-
-    .fileBtn input {
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-.input {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 14px;
-    background: rgba(255,255,255,.9);
-}
-
-.list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.item {
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 10px 10px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    background: rgba(255,255,255,.85);
-}
-
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    margin-top: 6px;
-    flex: 0 0 10px;
-    background: rgba(0,0,0,.15);
-}
-
-.itemMain {
-    flex: 1
-}
-
-.itemTop {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.itemTitle {
-    font-weight: 950
-}
-
-.itemMeta {
-    font-size: 12px;
-    color: var(--muted)
-}
-
-.itemSub {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 2px;
-}
-
-.weekGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.dayBlock {
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 10px;
-    background: rgba(255,255,255,.6)
-}
-
-.dayTitle {
-    font-weight: 950;
-    margin-bottom: 8px
-}
-
-.dayEmpty {
-    color: var(--muted);
-    font-size: 12px
-}
-
-.wishBox {
-    border: 1px solid rgba(247,168,198,.55);
-    background: linear-gradient(180deg, rgba(252,227,238,.75), rgba(255,255,255,.95));
-    border-radius: 16px;
-    padding: 14px;
-    font-size: 16px;
-    line-height: 1.35;
-    font-weight: 850;
-}
-
-/* Memory */
-.memoryGrid {
-    --cols: 2;
-    display: grid;
-    grid-template-columns: repeat(var(--cols), 1fr);
-    gap: 10px;
-}
-
-.memBtn {
-    height: 78px;
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    background: rgba(0,0,0,.04);
-    box-shadow: 0 6px 16px rgba(0,0,0,.04);
-    cursor: pointer;
-    transition: transform .08s ease, filter .08s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 900;
-    user-select: none;
-    color: rgba(0,0,0,.35);
-}
-
-    .memBtn.flash {
-        outline: 3px solid rgba(247,168,198,.85);
-        filter: brightness(1.10);
-        transform: scale(1.02);
-    }
-
-@media (max-width: 380px) {
-    .memBtn {
-        height: 70px;
-    }
-}
-
-/* Quiz */
-.quizCats {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 10px 0 8px;
-}
-
-.chip {
-    padding: 10px 12px;
-    border-radius: 14px;
-    border: 1px solid rgba(0,0,0,.08);
-    background: rgba(255,255,255,.65);
-    cursor: pointer;
-    font-weight: 600;
-}
-
-    .chip.active {
-        border-color: rgba(0,0,0,.18);
-        background: rgba(255,214,231,.55);
-    }
-
-.quizQuestion {
-    font-weight: 900;
-    margin: 10px 0 10px;
-}
-
-.quizOptions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.quizOptBtn {
-    width: 100%;
-    text-align: left;
-    border-radius: 14px;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,.85);
-    cursor: pointer;
-    font-weight: 800;
-}
-
-    .quizOptBtn.correct {
-        border-color: rgba(52,199,89,.35);
-        background: rgba(52,199,89,.12);
-    }
-
-    .quizOptBtn.wrong {
-        border-color: rgba(217,75,90,.35);
-        background: rgba(217,75,90,.12);
-    }
-
-/* Celebration overlay */
-.celebrate {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    background: rgba(0,0,0,.22);
-    backdrop-filter: blur(6px);
-}
-
-    .celebrate.hidden {
-        display: none;
-    }
-
-.celebrateCard {
-    position: relative;
-    background: rgba(255,255,255,.92);
-    border: 1px solid rgba(247,168,198,.45);
-    border-radius: 22px;
-    padding: 16px 18px;
-    box-shadow: 0 18px 50px rgba(0,0,0,.18);
-    text-align: center;
-    transform: translateY(8px);
-    animation: popIn .28s ease-out forwards;
-}
-
-@keyframes popIn {
-    from {
-        transform: translateY(12px) scale(.98);
-        opacity: .0;
-    }
-
-    to {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-    }
-}
-
-.celebrateTitle {
-    font-weight: 1000;
-    font-size: 18px;
-}
-
-.celebrateSub {
-    margin-top: 4px;
-    font-weight: 900;
-    color: rgba(0,0,0,.62);
-}
-
-.celebrateParticles {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.particle {
-    position: absolute;
-    top: -20px;
-    font-size: 18px;
-    opacity: 0;
-    animation: fall 1.15s ease-in forwards;
-}
-
-@keyframes fall {
-    0% {
-        transform: translateY(-20px) rotate(0deg);
-        opacity: 0;
-    }
-
-    10% {
-        opacity: 1;
-    }
-
-    100% {
-        transform: translateY(120vh) rotate(260deg);
-        opacity: 0;
-    }
-}
-
-/* Modal */
-.modal::backdrop {
-    background: rgba(0,0,0,.25)
-}
-
-.modal {
-    border: 0;
-    padding: 0;
-    width: min(520px, calc(100vw - 24px));
-    border-radius: 18px;
-}
-
-.modalBody {
-    padding: 14px;
-    background: #fff;
-    border-radius: 18px;
-    border: 1px solid var(--border);
-}
-
-.modalTitle {
-    font-weight: 950;
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-
-    .field span {
-        font-size: 12px;
-        color: var(--muted)
-    }
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#F7A8C6" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>Alina’s UniWeek 💗</title>
+
+    <!-- Без manifest и sw: чтобы не было проблем с кэшем и иконками -->
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <header class="appHeader">
+        <div class="titleBlock">
+            <div class="appTitle">Alina’s UniWeek 💗</div>
+            <div class="subtitle"></div>
+        </div>
+
+        <div class="weekSwitch">
+            <span class="pillLabel">Неделя</span>
+            <div class="segmented" role="tablist" aria-label="Week type">
+                <button class="segBtn" id="weekOddBtn" type="button">Odd</button>
+                <button class="segBtn" id="weekEvenBtn" type="button">Even</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <nav class="tabs" aria-label="Tabs">
+            <button class="tabBtn active" id="tabSchedule" type="button">Расписание</button>
+            <button class="tabBtn" id="tabWishes" type="button">Пожелания 💗</button>
+            <button class="tabBtn" id="tabSettings" type="button">Настройки</button>
+        </nav>
+
+        <!-- SCHEDULE -->
+        <section id="screenSchedule" class="screen active">
+            <div class="card soft">
+                <div class="smallMuted">
+                    Подсказка 💗: утром перед учёбой открой «Пожелания» — там будет что-то тёплое + мини-игры.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Сегодня</div>
+                    <div class="smallMuted" id="todayLabel"></div>
+                </div>
+
+                <div class="list" id="todayList"></div>
+            </div>
+
+            <div class="card">
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Неделя (Пн–Сб)</div>
+                </div>
+                <div class="weekGrid" id="weekGrid"></div>
+            </div>
+        </section>
+
+        <!-- WISHES -->
+        <section id="screenWishes" class="screen">
+            <div class="card">
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Пожелание на сегодня 💗</div>
+                    <button class="btn secondary" id="newWishBtn" type="button">Ещё</button>
+                </div>
+
+                <div class="wishBox" id="wishBox"></div>
+            </div>
+
+            <div class="card soft">
+                <div class="smallMuted center">Поиграй, если заскучаешь 🙂</div>
+            </div>
+
+            <!-- GAME 1: Memory -->
+            <div class="card">
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Memory</div>
+                    <div class="smallMuted" id="memoryStatus">Нажми Start</div>
+                </div>
+
+                <div class="smallMuted" style="margin-bottom:10px;">
+                    Запомни последовательность и повтори её.
+                </div>
+
+                <div class="memoryGrid" id="memoryGrid" aria-label="Memory game buttons"></div>
+
+                <div class="row" style="margin-top:12px;">
+                    <button class="btn" id="memoryStartBtn" type="button">Start</button>
+                    <button class="btn secondary" id="memoryResetBtn" type="button">Reset</button>
+                    <div class="smallMuted" id="memoryLevelLabel">Level: 0</div>
+                </div>
+            </div>
+
+            <!-- GAME 2: Quiz -->
+            <div class="card">
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Quiz</div>
+                    <div class="smallMuted" id="quizScore">0 / 0</div>
+                </div>
+
+                <div class="row" style="margin: 8px 0 6px;">
+                    <span class="smallMuted">Сложность:</span>
+                    <div class="segmented" role="tablist" aria-label="Quiz difficulty">
+                        <button class="segBtn" id="quizEasyBtn" type="button">Easy</button>
+                        <button class="segBtn" id="quizMedBtn" type="button">Medium</button>
+                        <button class="segBtn" id="quizHardBtn" type="button">Hard</button>
+                    </div>
+                </div>
+
+                <div class="quizCats">
+                    <button id="quizCatHistoryBtn" class="chip">🏛️ История</button>
+                    <button id="quizCatScienceBtn" class="chip">🧪 Наука</button>
+                    <button id="quizCatLitBtn" class="chip">📚 Литература</button>
+                    <button id="quizCatGeoBtn" class="chip">🌍 География</button>
+                    <button id="quizCatLogicBtn" class="chip">🧠 Логика</button>
+                </div>
+
+                <div class="quizQuestion" id="quizQuestion">Нажми “Next”, чтобы начать.</div>
+                <div class="quizOptions" id="quizOptions"></div>
+
+                <div class="row" style="margin-top:12px;">
+                    <button class="btn" id="quizNextBtn" type="button">Next</button>
+                    <button class="btn secondary" id="quizResetBtn" type="button">Reset</button>
+                    <div class="smallMuted" id="quizFeedback"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section id="screenSettings" class="screen">
+            <div class="card">
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Управление расписанием</div>
+                    <div class="smallMuted">Чтобы не мешало</div>
+                </div>
+
+                <div class="row" style="margin-top:12px;">
+                    <button class="btn" id="addClassBtn" type="button">Добавить пару</button>
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+                    <label class="btn secondary fileBtn">
+                        Импорт CSV
+                        <input id="csvInput" type="file" accept=".csv,text/csv" />
+                    </label>
+                    <div class="smallMuted">CSV можно делать в Excel/Google Sheets.</div>
+                </div>
+
+                <div class="row" style="margin-top:12px;">
+                    <button class="btn danger secondary" id="clearScheduleBtn" type="button">Очистить расписание</button>
+                    <div class="smallMuted">Пожелания и игры не удаляются.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Add class -->
+    <dialog class="modal" id="classDialog">
+        <form method="dialog" class="modalBody" id="classForm">
+            <div class="modalTitle">Добавить пару</div>
+
+            <label class="field">
+                <span>Название</span>
+                <input class="input" name="courseName" required placeholder="Напр. Гражданское право" />
+            </label>
+
+            <div class="row">
+                <label class="field grow">
+                    <span>Тип</span>
+                    <select class="input" name="classType" required>
+                        <option value="lecture">Лекция</option>
+                        <option value="seminar">Семинар</option>
+                        <option value="lab">Лабораторная</option>
+                    </select>
+                </label>
+
+                <label class="field grow">
+                    <span>Неделя</span>
+                    <select class="input" name="weekType" required>
+                        <option value="both">Both</option>
+                        <option value="odd">Odd</option>
+                        <option value="even">Even</option>
+                    </select>
+                </label>
+            </div>
+
+            <label class="field">
+                <span>День</span>
+                <select class="input" name="dayOfWeek" required>
+                    <option value="monday">Понедельник</option>
+                    <option value="tuesday">Вторник</option>
+                    <option value="wednesday">Среда</option>
+                    <option value="thursday">Четверг</option>
+                    <option value="friday">Пятница</option>
+                    <option value="saturday">Суббота</option>
+                </select>
+            </label>
+
+            <div class="row">
+                <label class="field grow">
+                    <span>Начало</span>
+                    <input class="input" name="startTime" required placeholder="09:00" inputmode="numeric" />
+                </label>
+
+                <label class="field grow">
+                    <span>Конец</span>
+                    <input class="input" name="endTime" required placeholder="10:30" inputmode="numeric" />
+                </label>
+            </div>
+
+            <label class="field">
+                <span>Аудитория (необязательно)</span>
+                <input class="input" name="location" placeholder="Напр. 304" />
+            </label>
+
+            <label class="field">
+                <span>Цвет (необязательно)</span>
+                <input class="input" name="colorHex" placeholder="#F7A8C6 или F7A8C6" />
+            </label>
+
+            <div class="row end">
+                <button class="btn secondary" value="cancel" type="submit">Отмена</button>
+                <button class="btn" value="default" type="submit">Сохранить</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Celebration overlay -->
+    <div id="celebrate" class="celebrate hidden" aria-hidden="true">
+        <div class="celebrateCard">
+            <div class="celebrateTitle" id="celebrateTitle">Ты моя умничка 💗🥰</div>
+            <div class="celebrateSub" id="celebrateSub">Так держать! ✨</div>
+        </div>
+        <div id="celebrateParticles" class="celebrateParticles"></div>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>
