@@ -1,10 +1,13 @@
-const CACHE = "uniweek-v3-1";
+const CACHE = "uniweek-v3-1-final";
 const ASSETS = [
     "./",
     "./index.html",
     "./styles.css",
     "./app.js",
-    "./manifest.webmanifest"
+    "./manifest.webmanifest",
+    "./icons/apple-touch-icon.png",
+    "./icons/icon-192.png",
+    "./icons/icon-512.png"
 ];
 
 self.addEventListener("install", (e) => {
