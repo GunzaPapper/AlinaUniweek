@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>Alina’s UniWeek 💗</title>
 
-    <!-- Без manifest и sw: чтобы не было проблем с кэшем и иконками -->
+    <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="stylesheet" href="./styles.css" />
 </head>
 
@@ -16,11 +16,11 @@
     <header class="appHeader">
         <div class="titleBlock">
             <div class="appTitle">Alina’s UniWeek 💗</div>
-            <div class="subtitle"></div>
+            <div class="subtitle" id="subtitle"></div>
         </div>
 
-        <div class="weekSwitch">
-            <span class="pillLabel">Неделя</span>
+        <div class="weekSwitch" aria-label="Week switch">
+            <span class="pillLabel" id="weekPill">Неделя</span>
             <div class="segmented" role="tablist" aria-label="Week type">
                 <button class="segBtn" id="weekOddBtn" type="button">Odd</button>
                 <button class="segBtn" id="weekEvenBtn" type="button">Even</button>
@@ -38,35 +38,35 @@
         <!-- SCHEDULE -->
         <section id="screenSchedule" class="screen active">
             <div class="card soft">
-                <div class="smallMuted">
-                    Подсказка 💗: утром перед учёбой открой «Пожелания» — там будет что-то тёплое + мини-игры.
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Расписание</div>
+                    <div class="iconRow">
+                        <button class="iconBtn" id="openCalendarBtn" type="button" aria-label="Открыть календарь">📅</button>
+                        <button class="iconBtn" id="goSettingsBtn" type="button" aria-label="Настройки">⚙️</button>
+                    </div>
                 </div>
+                <div class="smallMuted" id="selectedDateLabel"></div>
             </div>
 
             <div class="card">
-                <div class="schedHeader">
-                    <div class="schedHeaderTop">
-                        <div class="schedHeaderTitle">Расписание</div>
-
-                        <div class="schedHeaderActions">
-                            <button id="calendarBtn" class="iconBtn" type="button" aria-label="Открыть календарь">📅</button>
-                            <input id="datePicker" class="datePicker" type="date" />
-                        </div>
-                    </div>
-
-                    <div class="schedHeaderNav">
-                        <button id="prevDayBtn" class="navBtn" type="button" aria-label="Предыдущий день">‹</button>
-                        <div id="pickedDateLabel" class="pickedDateLabel"></div>
-                        <button id="nextDayBtn" class="navBtn" type="button" aria-label="Следующий день">›</button>
-                    </div>
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Сегодня</div>
+                    <div class="smallMuted" id="todayLabel"></div>
                 </div>
+                <div class="list" id="todayList"></div>
+            </div>
 
-                <div class="scheduleList" id="scheduleList"></div>
+            <div class="card">
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Неделя (Пн–Сб)</div>
+                </div>
+                <div class="weekGrid" id="weekGrid"></div>
             </div>
         </section>
 
         <!-- WISHES -->
         <section id="screenWishes" class="screen">
+            <!-- Wish card -->
             <div class="card">
                 <div class="cardTitleRow">
                     <div class="cardTitle">Пожелание на сегодня 💗</div>
@@ -76,51 +76,13 @@
                 <div class="wishBox" id="wishBox"></div>
             </div>
 
-            <div class="card soft">
-                <div class="smallMuted center">Поиграй, если заскучаешь 🙂</div>
-            </div>
-
-            <!-- GAME 1: Memory -->
+            <!-- Quiz card -->
             <div class="card">
                 <div class="cardTitleRow">
-                    <div class="cardTitle">Memory</div>
-                    <div class="smallMuted" id="memoryStatus">Нажми Start</div>
+                    <div class="cardTitle">Quiz 💗</div>
+                    <button class="btn" id="startQuizBtn" type="button">Начать</button>
                 </div>
-
-                <div class="smallMuted" style="margin-bottom:10px;">
-                    Запомни последовательность и повтори её.
-                </div>
-
-                <div class="memoryTop">
-                    <button class="btn" id="memoryStartBtn" type="button">Start</button>
-                    <button class="btn secondary" id="memoryResetBtn" type="button">Reset</button>
-                    <div class="smallMuted" id="memoryLevelLabel">Level: 0</div>
-                </div>
-
-                <div class="memoryGrid" id="memoryGrid"></div>
-            </div>
-
-            <!-- GAME 2: Quiz -->
-            <div class="card">
-                <div class="cardTitleRow">
-                    <div class="cardTitle">Quiz</div>
-                    <div class="smallMuted">Счёт: <span id="quizScore">0 / 0</span></div>
-                </div>
-
-                <div class="quizLevels">
-                    <button class="pillBtn" id="quizEasyBtn" type="button">😊 Easy</button>
-                    <button class="pillBtn" id="quizMedBtn" type="button">🧠 Medium</button>
-                    <button class="pillBtn" id="quizHardBtn" type="button">🔥 Hard</button>
-                </div>
-
-                <div class="quizQ" id="quizQuestion">Нажми “Next”, чтобы начать.</div>
-                <div class="quizOptions" id="quizOptions"></div>
-                <div class="quizFeedback" id="quizFeedback"></div>
-
-                <div class="quizActions">
-                    <button class="btn" id="quizNextBtn" type="button">Next</button>
-                    <button class="btn secondary" id="quizResetBtn" type="button">Reset</button>
-                </div>
+                <div class="smallMuted">Мини-вопросы с уровнями сложности 💗</div>
             </div>
         </section>
 
@@ -128,99 +90,188 @@
         <section id="screenSettings" class="screen">
             <div class="card">
                 <div class="cardTitleRow">
-                    <div class="cardTitle">Расписание</div>
+                    <div class="cardTitle">Управление расписанием</div>
+                    <div class="smallMuted">Данные хранятся только на этом устройстве</div>
                 </div>
 
-                <div class="settingsRow">
+                <div class="row" style="margin-top:12px;">
                     <button class="btn" id="addClassBtn" type="button">Добавить пару</button>
-                    <button class="btn danger" id="clearScheduleBtn" type="button">Очистить</button>
                 </div>
 
-                <div class="smallMuted" style="margin:8px 0 6px;">
-                    Импорт CSV (8 колонок):
-                    <div class="mono">coursename,type,dayofweek,starttime,endtime,weektype,location,color</div>
+                <div class="row" style="margin-top:10px;">
+                    <label class="btn secondary fileBtn">
+                        Импорт CSV
+                        <input id="csvInput" type="file" accept=".csv,text/csv" />
+                    </label>
+                    <div class="smallMuted">Формат: courseName,type,dayOfWeek,startTime,endTime,weekType,location,teacher,color</div>
                 </div>
-                <input class="fileInput" id="csvInput" type="file" accept=".csv,text/csv" />
+
+                <div class="row" style="margin-top:12px;">
+                    <button class="btn danger secondary" id="clearAllBtn" type="button">Очистить всё</button>
+                    <div class="smallMuted">Сотрёт пары и историю игр</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="cardTitleRow">
+                    <div class="cardTitle">Игры 💗</div>
+                    <div class="smallMuted">Небольшие мини-игры</div>
+                </div>
+
+                <div class="row" style="margin-top:12px;">
+                    <button class="btn secondary" id="openMemoryBtn" type="button">Memory 💗</button>
+                </div>
             </div>
         </section>
+    </main>
 
-        <!-- ADD CLASS DIALOG -->
-        <dialog class="dialog" id="classDialog">
-            <form class="dialogForm" id="classForm" method="dialog">
-                <div class="dialogTitle">Добавить пару</div>
+    <!-- Add class modal -->
+    <dialog class="modal" id="classDialog">
+        <form method="dialog" class="modalBody" id="classForm">
+            <div class="modalTitle">Добавить пару</div>
 
-                <label class="field">
-                    <span>Название</span>
-                    <input name="courseName" required />
-                </label>
+            <label class="field">
+                <span>Название</span>
+                <input class="input" name="courseName" required placeholder="Напр. Математика" />
+            </label>
 
-                <label class="field">
+            <div class="row">
+                <label class="field grow">
                     <span>Тип</span>
-                    <select name="classType" required>
-                        <option value="lecture">Lecture</option>
-                        <option value="seminar">Seminar</option>
-                        <option value="lab">Lab</option>
+                    <select class="input" name="classType" required>
+                        <option value="lecture">Лекция</option>
+                        <option value="seminar">Семинар</option>
+                        <option value="lab">Лабораторная</option>
                     </select>
                 </label>
 
-                <label class="field">
-                    <span>День</span>
-                    <select name="dayOfWeek" required>
-                        <option value="monday">Monday</option>
-                        <option value="tuesday">Tuesday</option>
-                        <option value="wednesday">Wednesday</option>
-                        <option value="thursday">Thursday</option>
-                        <option value="friday">Friday</option>
-                        <option value="saturday">Saturday</option>
-                    </select>
-                </label>
-
-                <div class="row2">
-                    <label class="field">
-                        <span>Начало</span>
-                        <input name="startTime" placeholder="08:30" required />
-                    </label>
-                    <label class="field">
-                        <span>Конец</span>
-                        <input name="endTime" placeholder="10:10" required />
-                    </label>
-                </div>
-
-                <label class="field">
+                <label class="field grow">
                     <span>Неделя</span>
-                    <select name="weekType" required>
+                    <select class="input" name="weekType" required>
+                        <option value="both">Both</option>
                         <option value="odd">Odd</option>
                         <option value="even">Even</option>
-                        <option value="both">Both</option>
                     </select>
                 </label>
-
-                <label class="field">
-                    <span>Аудитория (опционально)</span>
-                    <input name="location" placeholder="350" />
-                </label>
-
-                <label class="field">
-                    <span>Цвет (HEX, опционально)</span>
-                    <input name="colorHex" placeholder="F7A8C6" />
-                </label>
-
-                <div class="dialogActions">
-                    <button class="btn secondary" value="cancel" type="button" onclick="document.getElementById('classDialog').close()">Отмена</button>
-                    <button class="btn" type="submit">Сохранить</button>
-                </div>
-            </form>
-        </dialog>
-
-        <!-- CELEBRATION OVERLAY -->
-        <div id="celebrate" class="celebrate hidden" aria-hidden="true">
-            <div class="celebrateCard">
-                <div class="celebrateTitle" id="celebrateTitle"></div>
-                <div class="celebrateSub" id="celebrateSub"></div>
             </div>
-            <div class="celebrateParticles" id="celebrateParticles"></div>
+
+            <div class="row">
+                <label class="field grow">
+                    <span>День</span>
+                    <select class="input" name="dayOfWeek" required>
+                        <option value="monday">Понедельник</option>
+                        <option value="tuesday">Вторник</option>
+                        <option value="wednesday">Среда</option>
+                        <option value="thursday">Четверг</option>
+                        <option value="friday">Пятница</option>
+                        <option value="saturday">Суббота</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="row">
+                <label class="field grow">
+                    <span>Начало</span>
+                    <input class="input" name="startTime" required placeholder="09:00" inputmode="numeric" />
+                </label>
+
+                <label class="field grow">
+                    <span>Конец</span>
+                    <input class="input" name="endTime" required placeholder="10:30" inputmode="numeric" />
+                </label>
+            </div>
+
+            <div class="row">
+                <label class="field grow">
+                    <span>Аудитория</span>
+                    <input class="input" name="location" required placeholder="Напр. a.304" />
+                </label>
+                <label class="field grow">
+                    <span>Преподаватель</span>
+                    <input class="input" name="teacher" required placeholder="Напр. Иванов" />
+                </label>
+            </div>
+
+            <label class="field">
+                <span>Цвет (необязательно)</span>
+                <input class="input" name="colorHex" placeholder="#F7A8C6" />
+            </label>
+
+            <div class="row end">
+                <button class="btn secondary" value="cancel" type="submit">Отмена</button>
+                <button class="btn" id="saveClassBtn" value="default" type="submit">Сохранить</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Calendar bottom sheet -->
+    <div class="sheetBackdrop" id="calBackdrop" hidden></div>
+    <section class="sheet" id="calSheet" aria-label="Календарь" hidden>
+        <div class="sheetGrab"></div>
+
+        <div class="sheetHead">
+            <button class="btn secondary sheetBtn" id="calCancelBtn" type="button">Отмена</button>
+            <div class="sheetTitle" id="calTitle">Март 2026</div>
+            <button class="btn sheetBtn" id="calDoneBtn" type="button">Готово</button>
         </div>
-    </main>
+
+        <div class="calNav">
+            <button class="iconBtn" id="calPrevBtn" type="button" aria-label="Предыдущий месяц">‹</button>
+            <div class="smallMuted" id="calMonthLabel"></div>
+            <button class="iconBtn" id="calNextBtn" type="button" aria-label="Следующий месяц">›</button>
+        </div>
+
+        <div class="calGrid" id="calGrid"></div>
+    </section>
+
+    <!-- Quiz modal -->
+    <dialog class="modal" id="quizDialog">
+        <div class="modalBody">
+            <div class="cardTitleRow" style="margin-bottom:8px;">
+                <div class="modalTitle" style="margin:0;">Quiz 💗</div>
+                <button class="btn secondary" id="closeQuizBtn" type="button">Закрыть</button>
+            </div>
+
+            <div class="segmented" style="margin-bottom:12px;">
+                <button class="segBtn" id="quizEasyBtn" type="button">easy</button>
+                <button class="segBtn" id="quizMedBtn" type="button">medium</button>
+                <button class="segBtn" id="quizHardBtn" type="button">hard</button>
+            </div>
+
+            <div class="quizQ" id="quizQuestion"></div>
+            <div class="list" id="quizAnswers"></div>
+
+            <div class="row end" style="margin-top:12px;">
+                <button class="btn secondary" id="quizNextBtn" type="button">Следующий</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Memory modal -->
+    <dialog class="modal" id="memoryDialog">
+        <div class="modalBody">
+            <div class="cardTitleRow" style="margin-bottom:8px;">
+                <div class="modalTitle" style="margin:0;">Memory 💗</div>
+                <button class="btn secondary" id="closeMemoryBtn" type="button">Закрыть</button>
+            </div>
+
+            <div class="smallMuted" id="memoryMeta" style="margin-bottom:10px;"></div>
+            <div class="memoryGrid" id="memoryGrid"></div>
+
+            <div class="row end" style="margin-top:12px;">
+                <button class="btn secondary" id="restartMemoryBtn" type="button">Сначала</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Praise / effects overlay -->
+    <div class="praiseOverlay" id="praiseOverlay" hidden>
+        <canvas class="confetti" id="confettiCanvas"></canvas>
+        <div class="praiseCard">
+            <div class="praiseText" id="praiseText"></div>
+            <div class="hearts" id="hearts"></div>
+        </div>
+    </div>
 
     <script src="./app.js"></script>
 </body>
