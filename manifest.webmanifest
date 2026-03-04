@@ -1,0 +1,15 @@
+﻿{
+  "name": "Alina’s UniWeek 💗",
+  "short_name": "UniWeek 💗",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#FFF7FB",
+  "theme_color": "#F7A8C6",
+  "icons": [
+    {
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAABpUlEQVR4nO2ZMU7DQBBFv7aQ0CwQmQbQyAqkQJZgB2gQmQYQkQkQmQkQkQ2gVhZQq1nY8wZbqv5t3m7cOaKp8fJm1cQAAAAAAAAAAAJBqkqT3m5mZqWg0mGm1Wg2r1WqXy+Wq1+vV6/Xm8/nc1dXV2c3NzTqfT0aNHj8bGxjQajbq6uoqOjo6mUwmOjo6+uXLF4/H4+7u7rPZbMlkMhkM9vb2FhYWGhoa3bt3i8fj8Xg8mUwmW1tb2dnZ6enpQqGQvLw8dXV1a2trq6urEokE7u7uGhoa8vLyS0tL8/PzA0NDlEolGxsbq9VqPp8P+fn5uLi4iEQi+fn5+vr6JBIJQqGQ9fX1VqtVY2NjQ6/XQ0NDp6enQqGQmZkZtVrN8fHxKpVK5XI5KpVKp9PpXq+X5+fnUqlUQqGQq6ur2dnZ8fHxvLy8nJycGhoaRkZGJBIJc3NzQ0NDpVIpZ2dnVqtVY2Nj8/PzKpVKp9PpWq0WAAAAAAAAAAAAgI8h3g2o0n8w2e0c2b0yZk0WlqgkB7GQ5bq0oQxv8w1cYq6n9n0d0h1r0fQqfV9m4nXb8Qf8w4pQb3c1oAAAAASUVORK5CYII=",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
