@@ -1,5 +1,5 @@
 // =====================
-// Alina’s UniWeek 💗 v3.1
+// Alina’s UniWeek 💗 v3.1 FINAL
 // =====================
 
 // ===== Storage keys =====
@@ -42,7 +42,7 @@ const goSettingsBtn = document.getElementById("goSettingsBtn");
 const addClassBtn = document.getElementById("addClassBtn");
 const clearAllBtn = document.getElementById("clearAllBtn");
 const csvInput = document.getElementById("csvInput");
-const openMemoryBtn = document.getElementById("openMemoryBtn");
+const importSub = document.getElementById("importSub");
 
 // ===== DOM: add class =====
 const classDialog = document.getElementById("classDialog");
@@ -59,10 +59,11 @@ const calNextBtn = document.getElementById("calNextBtn");
 const calCancelBtn = document.getElementById("calCancelBtn");
 const calDoneBtn = document.getElementById("calDoneBtn");
 
-// ===== DOM: wishes & quiz =====
+// ===== DOM: wishes & quiz & memory launch =====
 const wishBox = document.getElementById("wishBox");
 const newWishBtn = document.getElementById("newWishBtn");
 const startQuizBtn = document.getElementById("startQuizBtn");
+const openMemoryWishesBtn = document.getElementById("openMemoryWishesBtn");
 
 const quizDialog = document.getElementById("quizDialog");
 const closeQuizBtn = document.getElementById("closeQuizBtn");
@@ -186,7 +187,6 @@ function loadJSON(key, fallback) {
     }
 }
 function saveJSON(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
-function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
 function newId() {
     if (crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -219,11 +219,7 @@ function normalizeHex(hex) {
 function hexToRgb(hex6) {
     const h = normalizeHex(hex6);
     if (!h) return null;
-    return {
-        r: parseInt(h.slice(0, 2), 16),
-        g: parseInt(h.slice(2, 4), 16),
-        b: parseInt(h.slice(4, 6), 16)
-    };
+    return { r: parseInt(h.slice(0, 2), 16), g: parseInt(h.slice(2, 4), 16), b: parseInt(h.slice(4, 6), 16) };
 }
 
 function formatDateYMD(d) {
@@ -264,7 +260,6 @@ function getWeek() {
     return (w === "even" || w === "odd") ? w : "odd";
 }
 function setWeek(w) {
-    // manual switch
     setWeekMode("manual");
     localStorage.setItem(K_WEEK, w);
     updateWeekUI();
@@ -285,8 +280,7 @@ function weekFromAnchor(date) {
 function applyAutoWeekIfNeeded() {
     if (getWeekMode() !== "auto") return;
     const d = getSelectedDate();
-    const w = weekFromAnchor(d);
-    localStorage.setItem(K_WEEK, w);
+    localStorage.setItem(K_WEEK, weekFromAnchor(d));
 }
 
 function weekFilterOK(item, selectedWeek) {
@@ -307,27 +301,17 @@ function isSameDay(a, b) {
         && a.getMonth() === b.getMonth()
         && a.getDate() === b.getDate();
 }
-
 function dowKeyFromDate(d) {
-    // JS 0=Sun..6=Sat
-    const wd = d.getDay();
+    const wd = d.getDay(); // 0=Sun..6=Sat
     const map = { 1: "monday", 2: "tuesday", 3: "wednesday", 4: "thursday", 5: "friday", 6: "saturday" };
-    return map[wd] || null; // Sunday -> null
+    return map[wd] || null;
 }
-
 function formatHumanDate(d) {
     return d.toLocaleDateString("ru-RU", { weekday: "long", day: "2-digit", month: "long", year: "numeric" });
 }
-
 function nowMinutes() {
     const d = new Date();
     return d.getHours() * 60 + d.getMinutes();
-}
-
-function escapeHTML(s) {
-    return String(s).replace(/[&<>"']/g, (c) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-    }[c]));
 }
 // ===== Tabs =====
 function showTab(which) {
@@ -350,7 +334,6 @@ function updateWeekUI() {
     weekOddBtn.classList.toggle("active", w === "odd");
     weekEvenBtn.classList.toggle("active", w === "even");
 
-    // subtitle
     const mode = getWeekMode();
     subtitle.textContent = (mode === "auto")
         ? `Авто-неделя: ${w.toUpperCase()}`
@@ -359,8 +342,57 @@ function updateWeekUI() {
 
 // ===== Rendering schedule =====
 function renderSelectedDateLabel() {
-    const d = getSelectedDate();
-    selectedDateLabel.textContent = `Выбрано: ${formatHumanDate(d)}`;
+    selectedDateLabel.textContent = `Выбрано: ${formatHumanDate(getSelectedDate())}`;
+}
+
+function renderClassItem(item, { compact = false, isNow = false } = {}) {
+    const el = document.createElement("div");
+    el.className = "item" + (isNow ? " now" : "");
+
+    const bar = document.createElement("div");
+    bar.className = "itemBar";
+
+    let tintStyle = "";
+    if (item.colorHex) {
+        const rgb = hexToRgb(item.colorHex);
+        if (rgb) {
+            bar.style.background = `#${item.colorHex}`;
+            tintStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},0.08)`;
+        }
+    }
+    el.appendChild(bar);
+
+    const main = document.createElement("div");
+    main.className = "itemMain";
+
+    if (tintStyle && !isNow) el.style.background = tintStyle;
+
+    const top = document.createElement("div");
+    top.className = "itemTop";
+
+    const title = document.createElement("div");
+    title.className = "itemTitle";
+    title.textContent = item.courseName;
+
+    const meta = document.createElement("div");
+    meta.className = "itemMeta";
+    meta.textContent = `${minutesToHHmm(item.startMinutes)}–${minutesToHHmm(item.endMinutes)} • ${item.classType}`;
+
+    top.appendChild(title);
+    top.appendChild(meta);
+    main.appendChild(top);
+
+    const sub = document.createElement("div");
+    sub.className = "itemSub";
+    const parts = [];
+    if (!compact) parts.push(item.weekType.toUpperCase());
+    parts.push(item.location);
+    parts.push(item.teacher);
+    sub.textContent = parts.filter(Boolean).join(" • ");
+    main.appendChild(sub);
+
+    el.appendChild(main);
+    return el;
 }
 
 function renderToday() {
@@ -371,16 +403,16 @@ function renderToday() {
     const classes = loadJSON(K_CLASSES, []).sort(sortClasses);
 
     const dayKey = dowKeyFromDate(selectedDate);
-    const items = dayKey
-        ? classes.filter(c => c.dayOfWeek === dayKey && weekFilterOK(c, selectedWeek))
-        : [];
-
     todayList.innerHTML = "";
 
     if (!dayKey) {
         todayList.innerHTML = `<div class="smallMuted">Это воскресенье — расписание отображаем Пн–Сб 💗</div>`;
         return;
     }
+
+    const items = classes
+        .filter(c => c.dayOfWeek === dayKey && weekFilterOK(c, selectedWeek))
+        .sort((a, b) => a.startMinutes - b.startMinutes);
 
     if (items.length === 0) {
         todayList.innerHTML = `<div class="smallMuted">На этот день пар нет (или они в другой неделе).</div>`;
@@ -429,60 +461,6 @@ function renderWeek() {
         weekGrid.appendChild(wrap);
     }
 }
-
-function renderClassItem(item, { compact = false, isNow = false } = {}) {
-    const el = document.createElement("div");
-    el.className = "item" + (isNow ? " now" : "");
-
-    const bar = document.createElement("div");
-    bar.className = "itemBar";
-    let tintStyle = "";
-    if (item.colorHex) {
-        const rgb = hexToRgb(item.colorHex);
-        if (rgb) {
-            bar.style.background = `#${item.colorHex}`;
-            // very soft tint; keep readable
-            tintStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},0.08)`;
-        }
-    }
-    el.appendChild(bar);
-
-    const main = document.createElement("div");
-    main.className = "itemMain";
-
-    if (tintStyle && !isNow) el.style.background = tintStyle;
-
-    const top = document.createElement("div");
-    top.className = "itemTop";
-
-    const title = document.createElement("div");
-    title.className = "itemTitle";
-    title.textContent = item.courseName;
-
-    const meta = document.createElement("div");
-    meta.className = "itemMeta";
-    meta.textContent = `${minutesToHHmm(item.startMinutes)}–${minutesToHHmm(item.endMinutes)} • ${item.classType}`;
-
-    top.appendChild(title);
-    top.appendChild(meta);
-    main.appendChild(top);
-
-    const sub = document.createElement("div");
-    sub.className = "itemSub";
-
-    // teacher + location in one line, plus weekType when not compact
-    const parts = [];
-    if (!compact) parts.push(item.weekType.toUpperCase());
-    parts.push(item.location);
-    parts.push(item.teacher);
-    sub.textContent = parts.filter(Boolean).join(" • ");
-
-    main.appendChild(sub);
-    el.appendChild(main);
-
-    return el;
-}
-
 function renderAll() {
     applyAutoWeekIfNeeded();
     updateWeekUI();
@@ -613,7 +591,6 @@ function parseCSV(text) {
     }
     return out;
 }
-
 // ===== Calendar sheet =====
 function openCalendarSheet() {
     if (isBlocked) return;
@@ -627,7 +604,6 @@ function openCalendarSheet() {
     renderCalendar();
     calBackdrop.hidden = false;
     calSheet.hidden = false;
-
     requestAnimationFrame(() => calSheet.classList.add("show"));
 }
 
@@ -645,20 +621,18 @@ function renderCalendar() {
 
     calTitle.textContent = monthName[0].toUpperCase() + monthName.slice(1);
     calMonthLabel.textContent = "Выбери дату";
-
     calGrid.innerHTML = "";
 
     const first = new Date(calViewYear, calViewMonth, 1);
     const last = new Date(calViewYear, calViewMonth + 1, 0);
     const startDow = (first.getDay() + 6) % 7; // Monday=0
-
     const totalDays = last.getDate();
+
     const cells = startDow + totalDays;
     const rows = Math.ceil(cells / 7) * 7;
 
     const today = new Date(); today.setHours(0, 0, 0, 0);
 
-    // build grid with leading blanks
     for (let i = 0; i < rows; i++) {
         const cell = document.createElement("button");
         cell.type = "button";
@@ -688,14 +662,13 @@ function renderCalendar() {
         calGrid.appendChild(cell);
     }
 }
+
 // ===== Wishes =====
 function pickWishIdx() {
     if (WISHES.length === 0) return -1;
     if (WISHES.length === 1) return 0;
     let idx = Math.floor(Math.random() * WISHES.length);
-    if (idx === lastWishIdx) {
-        idx = (idx + 1 + Math.floor(Math.random() * (WISHES.length - 1))) % WISHES.length;
-    }
+    if (idx === lastWishIdx) idx = (idx + 1 + Math.floor(Math.random() * (WISHES.length - 1))) % WISHES.length;
     return idx;
 }
 
@@ -724,13 +697,15 @@ function renderWishesIfEmpty() {
     }
 }
 
-// ===== Praise + effects (confetti + hearts) =====
+// ===== Praise + effects =====
 let confettiAnim = null;
+
 function resizeConfettiCanvas() {
     const rect = praiseOverlay.getBoundingClientRect();
     confettiCanvas.width = Math.floor(rect.width);
     confettiCanvas.height = Math.floor(rect.height);
 }
+
 function spawnHearts(count = 14) {
     hearts.innerHTML = "";
     const w = hearts.clientWidth;
@@ -770,7 +745,6 @@ function startConfetti(durationMs = 900) {
     }
 
     const start = performance.now();
-
     function frame(t) {
         const elapsed = t - start;
         ctx.clearRect(0, 0, W, H);
@@ -779,7 +753,6 @@ function startConfetti(durationMs = 900) {
             p.x += p.vx;
             p.y += p.vy;
             p.rot += p.vr;
-
             ctx.save();
             ctx.translate(p.x, p.y);
             ctx.rotate(p.rot);
@@ -788,19 +761,13 @@ function startConfetti(durationMs = 900) {
             ctx.restore();
         }
 
-        if (elapsed < durationMs) {
-            confettiAnim = requestAnimationFrame(frame);
-        } else {
-            ctx.clearRect(0, 0, W, H);
-            confettiAnim = null;
-        }
+        if (elapsed < durationMs) confettiAnim = requestAnimationFrame(frame);
+        else { ctx.clearRect(0, 0, W, H); confettiAnim = null; }
     }
-
     confettiAnim = requestAnimationFrame(frame);
 }
 
 function pickPraise() {
-    // avoid repeating too often: store last 5 indices
     const k = "uniweek_praise_hist";
     const hist = loadJSON(k, []);
     let idx = Math.floor(Math.random() * PRAISES.length);
@@ -860,12 +827,8 @@ function pickQuizQuestion(diff) {
 
     let idx = Math.floor(Math.random() * bank.length);
     let tries = 0;
-    while (recent.has(idx) && tries < 40) {
-        idx = Math.floor(Math.random() * bank.length);
-        tries++;
-    }
+    while (recent.has(idx) && tries < 40) { idx = Math.floor(Math.random() * bank.length); tries++; }
 
-    // avoid immediate repeat (strong)
     const last = (hist[diff] || [])[hist[diff].length - 1];
     if (bank.length > 1 && idx === last) idx = (idx + 1) % bank.length;
 
@@ -875,7 +838,6 @@ function pickQuizQuestion(diff) {
 function setQuizDiff(diff) {
     quizDiff = diff;
     localStorage.setItem(K_QUIZ_DIFF, diff);
-
     quizEasyBtn.classList.toggle("active", diff === "easy");
     quizMedBtn.classList.toggle("active", diff === "medium");
     quizHardBtn.classList.toggle("active", diff === "hard");
@@ -898,10 +860,8 @@ function renderQuizQuestion() {
         btn.textContent = ans;
         btn.addEventListener("click", async () => {
             if (isBlocked) return;
-            // lock input while praise
             const ok = i === quizCurrent.correct;
             pushQuizHist(quizDiff, quizCurrent.idx, 20);
-
             await showPraise(ok ? pickPraise() : "Ничего 💗 Попробуем ещё раз ✨");
             renderQuizQuestion();
         });
@@ -917,7 +877,7 @@ function openQuiz() {
     quizDialog.showModal();
 }
 
-// ===== Memory game =====
+// ===== Memory =====
 function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -929,22 +889,14 @@ function shuffle(arr) {
 function newMemoryGame() {
     const icons = ["🍓", "🌸", "💗", "🍬", "🧁", "🐻", "✨", "🎀"];
     const deck = shuffle([...icons, ...icons]).map((v, idx) => ({ id: idx, v, matched: false }));
-    return {
-        deck,
-        flipped: [],
-        moves: 0,
-        lock: false,
-        startAt: Date.now(),
-    };
+    return { deck, flipped: [], moves: 0, lock: false };
 }
 
 function renderMemory() {
     memoryGrid.innerHTML = "";
     const best = Number(localStorage.getItem(K_MEMORY_BEST) || 0);
 
-    memoryMeta.textContent = best > 0
-        ? `Лучший результат: ${best} ходов`
-        : "Собери пары 💗";
+    memoryMeta.textContent = best > 0 ? `Лучший результат: ${best} ходов` : "Собери пары 💗";
 
     for (const card of memState.deck) {
         const btn = document.createElement("button");
@@ -967,8 +919,7 @@ function renderMemory() {
 }
 
 async function onMemoryClick(cardId) {
-    // Fix bug: when praise shows, do not allow clicks. Also lock internal.
-    if (isBlocked) return;
+    if (isBlocked) return;         // ✅ пауза при похвале
     if (!memState || memState.lock) return;
 
     const card = memState.deck.find(c => c.id === cardId);
@@ -992,14 +943,12 @@ async function onMemoryClick(cardId) {
             memState.flipped = [];
             renderMemory();
 
-            await showPraise(pickPraise()); // pauses game via isBlocked
+            await showPraise(pickPraise());
             memState.lock = false;
 
             if (memState.deck.every(c => c.matched)) {
                 const prevBest = Number(localStorage.getItem(K_MEMORY_BEST) || 0);
-                if (!prevBest || memState.moves < prevBest) {
-                    localStorage.setItem(K_MEMORY_BEST, String(memState.moves));
-                }
+                if (!prevBest || memState.moves < prevBest) localStorage.setItem(K_MEMORY_BEST, String(memState.moves));
                 await showPraise("Ты победила! 💗");
                 renderMemory();
             }
@@ -1012,7 +961,6 @@ async function onMemoryClick(cardId) {
         }
     }
 }
-
 function openMemory() {
     if (isBlocked) return;
     memState = newMemoryGame();
@@ -1051,21 +999,26 @@ clearAllBtn.addEventListener("click", () => {
     renderAll();
 });
 
+// CSV import + красивая подпись
 csvInput.addEventListener("change", async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (importSub) importSub.textContent = file.name;
+
     try {
         const text = await file.text();
         const parsed = parseCSV(text);
         const classes = loadJSON(K_CLASSES, []);
         parsed.forEach(x => classes.push(x));
         saveJSON(K_CLASSES, classes);
-        alert(`Импортировано: ${parsed.length}`);
+        await showPraise(`Импортировано: ${parsed.length} 💗`);
         renderAll();
     } catch (err) {
         alert(String(err?.message || err));
     } finally {
         e.target.value = "";
+        setTimeout(() => { if (importSub) importSub.textContent = "Нажми и выбери файл"; }, 900);
     }
 });
 
@@ -1104,18 +1057,13 @@ newWishBtn.addEventListener("click", setWishAnimated);
 // Quiz
 startQuizBtn.addEventListener("click", openQuiz);
 closeQuizBtn.addEventListener("click", () => quizDialog.close());
-
 quizEasyBtn.addEventListener("click", () => { setQuizDiff("easy"); renderQuizQuestion(); });
 quizMedBtn.addEventListener("click", () => { setQuizDiff("medium"); renderQuizQuestion(); });
 quizHardBtn.addEventListener("click", () => { setQuizDiff("hard"); renderQuizQuestion(); });
+quizNextBtn.addEventListener("click", () => { if (!isBlocked) renderQuizQuestion(); });
 
-quizNextBtn.addEventListener("click", () => {
-    if (isBlocked) return;
-    renderQuizQuestion();
-});
-
-// Memory
-openMemoryBtn.addEventListener("click", openMemory);
+// Memory launch (в пожеланиях)
+openMemoryWishesBtn.addEventListener("click", openMemory);
 closeMemoryBtn.addEventListener("click", () => memoryDialog.close());
 restartMemoryBtn.addEventListener("click", () => { memState = newMemoryGame(); renderMemory(); });
 
@@ -1126,9 +1074,11 @@ window.addEventListener("resize", () => {
 
 // ===== Init =====
 function init() {
+    // ✅ принудительно прячем похвалу при старте
+    praiseOverlay.hidden = true;
+
     // set default selected date to today if missing
-    const sd = localStorage.getItem(K_SELECTED_DATE);
-    if (!sd) setSelectedDate(new Date());
+    if (!localStorage.getItem(K_SELECTED_DATE)) setSelectedDate(new Date());
 
     // default week mode
     if (!localStorage.getItem(K_WEEK_MODE)) setWeekMode("auto");
